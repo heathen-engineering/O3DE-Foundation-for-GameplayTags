@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder FoundationGameplayTags/Assets": {
+                    "watch": "@GEMROOT:FoundationGameplayTags@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder FoundationGameplayTags/Registry": {
+                    "watch": "@GEMROOT:FoundationGameplayTags@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
