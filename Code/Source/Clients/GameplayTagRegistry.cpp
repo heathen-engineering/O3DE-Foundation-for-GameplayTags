@@ -16,7 +16,7 @@
  */
 
 #include "GameplayTagRegistry.h"
-#include "xxhash.h"
+#include <xxHash/xxhash.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
 namespace Heathen

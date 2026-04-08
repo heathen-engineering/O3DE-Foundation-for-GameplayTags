@@ -1,7 +1,5 @@
 
 set(FILES
-        Source/ThirdParty/xxHash/xxhash.c
-        Source/ThirdParty/xxHash/xxhash.h
         Source/Clients/GameplayTagRegistry.cpp
         Source/Clients/GameplayTag.cpp
         Source/Clients/GameplayTagCollection.cpp

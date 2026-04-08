@@ -50,6 +50,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            Gem::xxHash.API
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -69,6 +70,7 @@ ly_add_target(
             Gem::${gem_name}.API
         PRIVATE
             Gem::${gem_name}.Private.Object
+            Gem::xxHash
 )
 
 # Include the gem name into the Client Module source file

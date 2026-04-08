@@ -1,13 +1,13 @@
 {
     "gem_name": "FoundationGameplayTags",
     "version": "1.0.0",
-    "display_name": "Foundation for GameplayTags",
+    "display_name": "Foundation for Gameplay Tags",
     "license": "Apache 2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "Heathen Group",
-    "origin_url": "",
+    "origin_url": "https://heathen.group",
     "type": "Code",
-    "summary": "The Foundation for GameplayTags Gem provides a lightweight, flexible tag system for O3DE projects. It enables developers to define, store, and manipulate tags in a structured way, supporting both simple presence checks and numeric values associated with each tag. This Gem forms the foundation for more complex gameplay, dialogue, or state systems that rely on tags for tracking game state, conditions, or other metadata.",
+    "summary": "The Foundation for Gameplay Tags Gem provides a lightweight, flexible tag system for O3DE projects. It enables developers to define, store, and manipulate tags in a structured way, supporting both simple presence checks and numeric values associated with each tag. This Gem forms the foundation for more complex gameplay, dialogue, or state systems that rely on tags for tracking game state, conditions, or other metadata.",
     "canonical_tags": [
         "Gem"
     ],
@@ -15,14 +15,15 @@
         "FoundationGameplayTags"
     ],
     "platforms": [
-        "Android","Windows","iOS","Linux"
+        "Windows","Linux","Android","iOS"
     ],
     "icon_path": "",
     "requirements": "",
     "documentation_url": "https://heathen.group",
     "dependencies": [
+        "xxHash"
     ],
-    "repo_uri": "",
+    "repo_uri": "https://github.com/heathen-engineering/O3DE-Foundation-for-GameplayTags",
     "compatible_engines": [
     ],
     "engine_api_dependencies":[
