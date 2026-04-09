@@ -33,6 +33,7 @@ Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` aut
 ## Requirements
 
 - O3DE engine **25.10.2** or compatible
+- [xxHash Gem from Heathen Group](https://github.com/heathen-engineering/O3DE-xxHash)
 
 ---
 
