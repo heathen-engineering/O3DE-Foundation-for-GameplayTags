@@ -9,6 +9,15 @@ A lightweight, flexible tag system for [Open 3D Engine (O3DE)](https://o3de.org)
 - **Origin:** Heathen Group
 - **Platforms:** Windows, Linux, macOS, Android, iOS
 
+---
+
+## Requirements
+
+- O3DE engine **25.10.2** or compatible
+- [xxHash](https://github.com/heathen-engineering/O3DE-xxHash) Gem (provides `xxHash::xxHashFunctions`)
+  
+---
+
 ## Become a GitHub Sponsor
 [![Discord](https://img.shields.io/badge/Discord--1877F2?style=social&logo=discord)](https://discord.gg/6X3xrRc)
 [![GitHub followers](https://img.shields.io/github/followers/heathen-engineering?style=social)](https://github.com/heathen-engineering?tab=followers)
@@ -30,12 +39,6 @@ Foundation for Gameplay Tags gives you a structured, hierarchy-aware tag system 
 | `GameplayTagRegistry` | Static registry that tracks parent-child relationships between tags |
 
 Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` automatically makes `"Effects.Buff.Strength"` a descendant of both `"Effects.Buff"` and `"Effects"`. All three classes are fully reflected for serialization and exposed to the BehaviorContext for use in Script Canvas and Lua.
-
----
-
-## Requirements
-
-- O3DE engine **25.10.2** or compatible
 
 ---
 
