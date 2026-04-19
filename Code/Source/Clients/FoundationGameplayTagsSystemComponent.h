@@ -29,5 +29,10 @@ namespace FoundationGameplayTags
         void Activate() override;
         void Deactivate() override;
         ////////////////////////////////////////////////////////////////////////
+
+    private:
+        /// Scans the project for *.tagbin binary products, deserialises each one
+        /// into a descendants map, and calls GameplayTagRegistry::MergeDefaultTags.
+        static void LoadDefaultTagsFromDisk();
     };
 } // namespace FoundationGameplayTags

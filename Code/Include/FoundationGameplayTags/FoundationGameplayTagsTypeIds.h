@@ -16,4 +16,7 @@ namespace FoundationGameplayTags
 
     // Interface TypeIds
     inline constexpr const char* FoundationGameplayTagsRequestsTypeId = "{9D770D07-AA1E-479C-9BE7-9380C81B7082}";
+
+    // Builder TypeIds
+    inline constexpr const char* GameplayTagBinaryBuilderTypeId = "{A3B4C5D6-E7F8-4901-B2C3-D4E5F6A7B8C9}";
 } // namespace FoundationGameplayTags

@@ -24,14 +24,14 @@ namespace Heathen
     {
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Enum<GameplayTagOperation>()
-                ->Value("Set", GameplayTagOperation::Set)
-                ->Value("Add", GameplayTagOperation::Add)
-                ->Value("Sub", GameplayTagOperation::Sub)
-                ->Value("Mul", GameplayTagOperation::Mul)
-                ->Value("Div", GameplayTagOperation::Div)
-                ->Value("Min", GameplayTagOperation::Min)
-                ->Value("Max", GameplayTagOperation::Max);
+            serialize->Enum<GameplayTagArithmetic>()
+                ->Value("Set", GameplayTagArithmetic::Set)
+                ->Value("Add", GameplayTagArithmetic::Add)
+                ->Value("Sub", GameplayTagArithmetic::Sub)
+                ->Value("Mul", GameplayTagArithmetic::Mul)
+                ->Value("Div", GameplayTagArithmetic::Div)
+                ->Value("Min", GameplayTagArithmetic::Min)
+                ->Value("Max", GameplayTagArithmetic::Max);
 
             serialize->Class<GameplayTagCollection>()
                 ->Version(1)
@@ -40,7 +40,7 @@ namespace Heathen
 
         if (auto* behavior = azrtti_cast<AZ::BehaviorContext*>(context))
         {
-            GameplayTagOperationReflect(*behavior);
+            GameplayTagArithmeticReflect(*behavior);
 
             behavior->Class<GameplayTagCollection>("Gameplay Tag Collection")
                 ->Attribute(AZ::Script::Attributes::Category, "Gameplay Tags")
@@ -54,7 +54,7 @@ namespace Heathen
                     {{
                         { "Tag", "The tag to apply the operation to" },
                         { "Operation", "The arithmetic operation to apply",
-                            behavior->MakeDefaultValue(static_cast<int>(GameplayTagOperation::Set)) },
+                            behavior->MakeDefaultValue(static_cast<int>(GameplayTagArithmetic::Set)) },
                         { "Value", "The value to use in the operation",
                             behavior->MakeDefaultValue(static_cast<AZ::u64>(1)) }
                     }},
@@ -90,19 +90,22 @@ namespace Heathen
                 ->Method("Get Descendants", &GameplayTagCollection::GetDescendants,
                     {{{ "Ancestor", "The ancestor tag to get descendants of" }}})
                 ->Method("Is Empty", &GameplayTagCollection::IsEmpty)
-                ->Method("Count", &GameplayTagCollection::Count);
+                ->Method("Count", &GameplayTagCollection::Count)
+                ->Method("Get Value", &GameplayTagCollection::GetValue,
+                    {{{ "Tag", "The tag whose stored u64 value to retrieve (0 if absent)" }}},
+                    "Returns the raw value stored for the tag, or 0 if the tag is not present");
         }
     }
 
     void GameplayTagCollection::AddTag(const GameplayTag& tag)
     {
 
-        Apply(tag, GameplayTagOperation::Set, 1);
+        Apply(tag, GameplayTagArithmetic::Set, 1);
     }
 
     void GameplayTagCollection::RemoveTag(const GameplayTag& tag)
     {
-        Apply(tag, GameplayTagOperation::Set, 0);
+        Apply(tag, GameplayTagArithmetic::Set, 0);
     }
 
     void GameplayTagCollection::Clear()
@@ -110,7 +113,7 @@ namespace Heathen
         m_tags.clear();
     }
 
-    void GameplayTagCollection::Apply(const GameplayTag& tag, GameplayTagOperation operation, AZ::u64 value)
+    void GameplayTagCollection::Apply(const GameplayTag& tag, GameplayTagArithmetic operation, AZ::u64 value)
     {
         if (!tag.IsValid())
         {
@@ -124,25 +127,25 @@ namespace Heathen
 
         switch (operation)
         {
-        case GameplayTagOperation::Set:
+        case GameplayTagArithmetic::Set:
             result = value;
             break;
-        case GameplayTagOperation::Add:
+        case GameplayTagArithmetic::Add:
             result = current + value;
             break;
-        case GameplayTagOperation::Sub:
+        case GameplayTagArithmetic::Sub:
             result = (current > value) ? current - value : 0;
             break;
-        case GameplayTagOperation::Mul:
+        case GameplayTagArithmetic::Mul:
             result = current * value;
             break;
-        case GameplayTagOperation::Div:
+        case GameplayTagArithmetic::Div:
             result = (value != 0) ? current / value : current;
             break;
-        case GameplayTagOperation::Min:
+        case GameplayTagArithmetic::Min:
             result = (current < value) ? current : value;
             break;
-        case GameplayTagOperation::Max:
+        case GameplayTagArithmetic::Max:
             result = (current > value) ? current : value;
             break;
         default:
@@ -338,7 +341,7 @@ namespace Heathen
             const GameplayTag tag(pair.first);
             if (other.Contains(tag, exactMatch))
             {
-                result.Apply(tag, GameplayTagOperation::Set, pair.second);
+                result.Apply(tag, GameplayTagArithmetic::Set, pair.second);
             }
         }
 
@@ -355,7 +358,7 @@ namespace Heathen
             const GameplayTag tag(pair.first);
             if (!other.Contains(tag, exactMatch))
             {
-                result.Apply(tag, GameplayTagOperation::Set, pair.second);
+                result.Apply(tag, GameplayTagArithmetic::Set, pair.second);
             }
         }
 
@@ -365,7 +368,7 @@ namespace Heathen
             const GameplayTag tag(pair.first);
             if (!Contains(tag, exactMatch))
             {
-                result.Apply(tag, GameplayTagOperation::Set, pair.second);
+                result.Apply(tag, GameplayTagArithmetic::Set, pair.second);
             }
         }
 
@@ -398,6 +401,16 @@ namespace Heathen
     AZ::u32 GameplayTagCollection::Count() const
     {
         return static_cast<AZ::u32>(m_tags.size());
+    }
+
+    AZ::u64 GameplayTagCollection::GetValue(const GameplayTag& tag) const
+    {
+        if (!tag.IsValid())
+        {
+            return 0;
+        }
+        const auto it = m_tags.find(tag.GetId());
+        return (it != m_tags.end()) ? it->second : 0;
     }
 
     bool GameplayTagCollection::ContainsAllDescendants(const GameplayTag& ancestor) const

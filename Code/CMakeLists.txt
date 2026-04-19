@@ -17,6 +17,24 @@ if(NOT PAL_TRAIT_FOUNDATIONGAMEPLAYTAGS_SUPPORTED)
     return()
 endif()
 
+# The ${gem_name}.Library target compiles the core type implementations into a linkable
+# static library. Not marked O3DE_PRIVATE_TARGET so that other gems can link it
+# transitively via Gem::FoundationGameplayTags.API (same pattern as xxHash.Library).
+ly_add_target(
+    NAME ${gem_name}.Library STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        foundationgameplaytags_library_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzFramework
+            Gem::xxHash.API
+)
+
 # The ${gem_name}.API target declares the common interface that users of this gem should depend on in their targets
 ly_add_target(
     NAME ${gem_name}.API INTERFACE
@@ -30,6 +48,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         INTERFACE
            AZ::AzCore
+           Gem::${gem_name}.Library
 )
 
 # The ${gem_name}.Private.Object target is an internal target
@@ -50,7 +69,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::xxHash.API
+            Gem::${gem_name}.Library
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -138,6 +157,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
+                AZ::AssetBuilderSDK
                 ${gem_name}.Private.Object
     )
 

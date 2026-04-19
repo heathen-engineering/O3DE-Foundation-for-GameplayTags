@@ -2,7 +2,9 @@
 #pragma once
 
 #include <Clients/FoundationGameplayTagsSystemComponent.h>
+#include "GameplayTagBinaryBuilder.h"
 
+#include <AzToolsFramework/ActionManager/ActionManagerRegistrationNotificationBus.h>
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 
 namespace FoundationGameplayTags
@@ -11,6 +13,7 @@ namespace FoundationGameplayTags
     class FoundationGameplayTagsEditorSystemComponent
         : public FoundationGameplayTagsSystemComponent
         , protected AzToolsFramework::EditorEvents::Bus::Handler
+        , public AzToolsFramework::ActionManagerRegistrationNotificationBus::Handler
     {
         using BaseSystemComponent = FoundationGameplayTagsSystemComponent;
     public:
@@ -33,5 +36,12 @@ namespace FoundationGameplayTags
 
         // AzToolsFramework::EditorEventsBus overrides ...
         void NotifyRegisterViews() override;
+
+        // AzToolsFramework::ActionManagerRegistrationNotificationBus
+        void OnMenuRegistrationHook()  override;
+        void OnMenuBindingHook()       override;
+        void OnActionRegistrationHook() override;
+
+        GameplayTagBinaryBuilder m_tagBinaryBuilder;
     };
 } // namespace FoundationGameplayTags

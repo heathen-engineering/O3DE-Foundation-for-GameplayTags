@@ -26,7 +26,7 @@ namespace Heathen
     static const bool s_validTagChars[128] = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 0-15
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 16-31
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 32-47
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0, // 32-47  (46='.')
         1,1,1,1,1,1,1,1,1,1,              // 48-57  '0'-'9'
         0,0,0,0,0,0,0,                    // 58-64
         1,1,1,1,1,1,1,1,1,1,1,1,1,        // 65-77  'A'-'M'
@@ -40,6 +40,7 @@ namespace Heathen
     };
 
     AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>> GameplayTagRegistry::m_descendants;
+    AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>> GameplayTagRegistry::m_defaultDescendants;
 
     void GameplayTagRegistry::Reflect(AZ::ReflectContext* context)
     {
@@ -189,7 +190,27 @@ namespace Heathen
 
     void GameplayTagRegistry::UnregisterAll()
     {
-        m_descendants.clear();
+        // Restore to the project defaults loaded from .tagbin products.
+        // User-registered tags are discarded; default tags survive.
+        m_descendants = m_defaultDescendants;
+    }
+
+    void GameplayTagRegistry::MergeDefaultTags(
+        const AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>>& defaults)
+    {
+        for (const auto& [parent, children] : defaults)
+        {
+            auto& dest = m_defaultDescendants[parent];
+            for (AZ::u64 child : children)
+                dest.insert(child);
+        }
+        // Also merge into the live working map so they are immediately visible.
+        for (const auto& [parent, children] : defaults)
+        {
+            auto& dest = m_descendants[parent];
+            for (AZ::u64 child : children)
+                dest.insert(child);
+        }
     }
 
     bool GameplayTagRegistry::IsDescendantOf(AZ::u64 tag, AZ::u64 ancestor)

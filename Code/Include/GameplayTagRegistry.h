@@ -48,8 +48,21 @@ namespace Heathen
         static AZStd::unordered_set<AZ::u64> GetDescendants(AZ::u64 tag);
 
         static bool ValidateTag(const AZStd::string& tag_string);
+
+        /// Merges a pre-computed descendants map into m_defaultDescendants.
+        /// Call once on startup after loading every .tagbin product.
+        /// The merged result persists across UnregisterAll() calls.
+        static void MergeDefaultTags(
+            const AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>>& defaults);
+
     private:
+        /// Runtime-mutable working set — user-registered tags live here.
         static AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>> m_descendants;
+
+        /// Project-default tags compiled from registered .gptags files (.tagbin products).
+        /// Never cleared by UnregisterAll(); only grows via MergeDefaultTags().
+        static AZStd::unordered_map<AZ::u64, AZStd::unordered_set<AZ::u64>> m_defaultDescendants;
+
         static AZStd::vector<AZStd::string> ParseTagString(const AZStd::string& tag_string);
     };
 }

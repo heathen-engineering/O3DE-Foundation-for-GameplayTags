@@ -25,7 +25,8 @@
 
 namespace Heathen
 {
-    AZ_ENUM_CLASS_WITH_UNDERLYING_TYPE(GameplayTagOperation, AZ::u8,
+    /// Arithmetic operation applied to a tag's u64 value inside a GameplayTagCollection.
+    AZ_ENUM_CLASS_WITH_UNDERLYING_TYPE(GameplayTagArithmetic, AZ::u8,
         Set,
         Add,
         Sub,
@@ -35,8 +36,8 @@ namespace Heathen
         Max
     );
 
-    AZ_ENUM_DEFINE_REFLECT_UTILITIES(GameplayTagOperation)
-    AZ_TYPE_INFO_SPECIALIZE(Heathen::GameplayTagOperation, "{F3A7B2C9-D4E1-4F8A-B6C3-2E9D5A7F1B4E}");
+    AZ_ENUM_DEFINE_REFLECT_UTILITIES(GameplayTagArithmetic)
+    AZ_TYPE_INFO_SPECIALIZE(Heathen::GameplayTagArithmetic, "{F3A7B2C9-D4E1-4F8A-B6C3-2E9D5A7F1B4E}");
 
     /// <summary>
     /// A collection of GameplayTags each with an associated u64 value.
@@ -71,7 +72,10 @@ namespace Heathen
         /// If the result is 0 the tag is removed.
         /// Invalid tags (id == 0) are ignored.
         /// </summary>
-        void Apply(const GameplayTag& tag, GameplayTagOperation operation, AZ::u64 value);
+        void Apply(const GameplayTag& tag, GameplayTagArithmetic operation, AZ::u64 value);
+
+        /// Returns the raw u64 value stored for the tag, or 0 if absent.
+        AZ::u64 GetValue(const GameplayTag& tag) const;
 
         // -----------------------------------------------------------------------
         // Presence checks - single tag
